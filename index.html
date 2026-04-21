@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asif R. Porosh — uraal.online</title>
+  <meta name="description" content="Dovetailing scattered thoughts. Field notes, systems, photography." />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- IBM Plex Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f8f7f4;
+      --ink: #1a1a18;
+      --ink-mid: #4a4a46;
+      --ink-light: #8a8a84;
+      --rule: #ddddd8;
+      --accent: #1a1a18;
+      --link: #2a4a8a;
+      --link-hover: #1a3060;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'IBM Plex Sans', sans-serif;
+    }
+
+    html {
+      font-size: 17px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-weight: 400;
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    /* ── Layout ── */
+    .wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 4rem 0 3rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .tagline {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 1.6rem;
+    }
+
+    .anchor {
+      font-size: 2.1rem;
+      font-weight: 300;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      margin-bottom: 1.2rem;
+    }
+
+    .anchor em {
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .name {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--ink-mid);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Sections ── */
+    section {
+      padding: 2.8rem 0;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    section:last-child {
+      border-bottom: none;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 1.2rem;
+    }
+
+    /* ── Bio ── */
+    .bio p {
+      color: var(--ink-mid);
+      font-size: 0.98rem;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+
+    .bio p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ── Links ── */
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .link-item {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--rule);
+      text-decoration: none;
+      transition: opacity 0.15s ease;
+    }
+
+    .link-item:last-child {
+      border-bottom: none;
+    }
+
+    .link-item:hover {
+      opacity: 0.65;
+    }
+
+    .link-name {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--ink);
+      min-width: 100px;
+    }
+
+    .link-desc {
+      font-size: 0.875rem;
+      color: var(--ink-light);
+    }
+
+    .link-arrow {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--ink-light);
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+
+    /* ── Now ── */
+    .now-text {
+      font-size: 0.95rem;
+      color: var(--ink-mid);
+      line-height: 1.7;
+    }
+
+    .now-text strong {
+      color: var(--ink);
+      font-weight: 500;
+    }
+
+    /* ── Contact ── */
+    .contact-line {
+      font-size: 0.95rem;
+      color: var(--ink-mid);
+    }
+
+    .contact-line a {
+      color: var(--link);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.15s ease;
+    }
+
+    .contact-line a:hover {
+      border-color: var(--link-hover);
+      color: var(--link-hover);
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: 2.5rem 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .footer-copy {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-light);
+      letter-spacing: 0.06em;
+    }
+
+    .footer-domain {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--ink-light);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Fade-in on load ── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    header,
+    section,
+    footer {
+      animation: fadeUp 0.5s ease both;
+    }
+
+    header {
+      animation-delay: 0.05s;
+    }
+
+    section:nth-of-type(1) {
+      animation-delay: 0.15s;
+    }
+
+    section:nth-of-type(2) {
+      animation-delay: 0.22s;
+    }
+
+    section:nth-of-type(3) {
+      animation-delay: 0.29s;
+    }
+
+    section:nth-of-type(4) {
+      animation-delay: 0.36s;
+    }
+
+    footer {
+      animation-delay: 0.43s;
+    }
+
+    /* ── Mobile ── */
+    @media (max-width: 480px) {
+      html {
+        font-size: 16px;
+      }
+
+      header {
+        padding: 3rem 0 2.5rem;
+      }
+
+      .anchor {
+        font-size: 1.7rem;
+      }
+
+      .link-name {
+        min-width: 80px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="wrap">
+
+    <header>
+      <p class="tagline">uraal.online</p>
+      <h1 class="anchor"><em>Dovetailing scattered thoughts.</em></h1>
+      <p class="name">Asif R. Porosh</p>
+    </header>
+
+    <!-- Bio -->
+    <section>
+      <p class="section-label">About</p>
+      <div class="bio">
+        <p>Works in telecom operations in Dhaka, Bangladesh — service assurance and platform reliability for
+          national-scale messaging infrastructure. The work sits at the intersection of systems engineering, regulatory
+          compliance, and operational governance.</p>
+        <p>Writes field notes on system behavior, builds tools for personal use, and photographs occasionally under the
+          name Horace Holly.</p>
+        <p>uraal.online is where the scattered parts connect.</p>
+      </div>
+    </section>
+
+    <!-- Links -->
+    <section>
+      <p class="section-label">Find</p>
+      <div class="links">
+
+        <a class="link-item" href="https://ledger.uraal.online" target="_blank" rel="noopener">
+          <span class="link-name">Ledger</span>
+          <span class="link-desc">Field notes, annotated.</span>
+          <span class="link-arrow">↗&#xFE0E;</span>
+        </a>
+
+        <a class="link-item" href="https://www.linkedin.com/in/rahmanasifur" target="_blank" rel="noopener">
+          <span class="link-name">LinkedIn</span>
+          <span class="link-desc">Professional record.</span>
+          <span class="link-arrow">↗&#xFE0E;</span>
+        </a>
+
+        <a class="link-item" href="https://www.flickr.com/photos/horaceholly/" target="_blank" rel="noopener">
+          <span class="link-name">Flickr</span>
+          <span class="link-desc">Photography. Horace Holly.</span>
+          <span class="link-arrow">↗&#xFE0E;</span>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Now -->
+    <section>
+      <p class="section-label">Now</p>
+      <p class="now-text">
+        Building <strong>Montra</strong> — a personal finance tracker.<br>
+        Coordinating <strong>Apnar Doctor</strong> — a healthcare platform for MCWH.<br>
+        Maintaining national A2P SMS infrastructure.
+      </p>
+    </section>
+
+    <!-- Contact -->
+    <section>
+      <p class="section-label">Contact</p>
+      <p class="contact-line">
+        Reach me at <a href="mailto:asif.tyro@gmail.com">asif.tyro@gmail.com</a>
+      </p>
+    </section>
+
+    <footer>
+      <div class="footer-inner">
+        <span class="footer-copy">© 2026 Asif R. Porosh</span>
+        <span class="footer-domain">uraal.online</span>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+
+</html>
