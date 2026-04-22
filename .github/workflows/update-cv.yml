@@ -1,0 +1,76 @@
+name: Update CV from r1
+
+on:
+  repository_dispatch:
+    types: [cv_updated]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout r2
+        uses: actions/checkout@v4
+
+      - name: Download files from r1 (API)
+        env:
+          TOKEN: ${{ secrets.CV_DISPATCH_TOKEN }}
+          REPO: ${{ github.event.client_payload.repo }}
+          SHA: ${{ github.event.client_payload.commit_sha }}
+        run: |
+          curl -H "Authorization: token $TOKEN" \
+            -H "Accept: application/vnd.github.raw" \
+            -o cv_raw_html.html \
+            https://api.github.com/repos/$REPO/contents/cv_raw_html.html?ref=$SHA
+
+          curl -H "Authorization: token $TOKEN" \
+            -H "Accept: application/vnd.github.raw" \
+            -o cv.pdf \
+            https://api.github.com/repos/$REPO/contents/cv.pdf?ref=$SHA
+
+      - name: Validate downloads
+        run: |
+          test -s cv_raw_html.html
+          test -s cv.pdf
+
+      - name: Inject HTML into template
+        run: |
+          cp cv-shell.html cv-shell.html.tmp
+
+          CONTENT=$(cat cv_raw_html.html)
+
+          # Replace placeholder
+          awk -v content="$CONTENT" '
+            /<!-- cv_insertion_point -->/ {
+              print content
+              next
+            }
+            { print }
+          ' cv-shell.html.tmp > cv.generated.html
+
+      - name: Compare with existing
+        id: diff
+        run: |
+          if [ -f cv.html ] && cmp -s cv.generated.html cv.html; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Replace files (only if changed)
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          mv cv.generated.html cv.html
+
+      - name: Commit changes
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          git add cv.html cv.pdf
+          git commit -m "chore: update CV from r1 (${{ github.event.client_payload.commit_sha }})"
+          git push
