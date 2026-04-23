@@ -1,4 +1,4 @@
-name: Update CV from r1
+name: Pull and Update CV from r1
 
 on:
   repository_dispatch:
