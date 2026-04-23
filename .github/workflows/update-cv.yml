@@ -11,6 +11,9 @@ jobs:
     permissions:
       contents: write
 
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
     steps:
       - name: Checkout r2
         uses: actions/checkout@v4
@@ -19,37 +22,35 @@ jobs:
         env:
           TOKEN: ${{ secrets.CV_DISPATCH_TOKEN }}
           REPO: ${{ github.event.client_payload.repo }}
-          SHA: ${{ github.event.client_payload.commit_sha }}
         run: |
-          curl -H "Authorization: token $TOKEN" \
+          curl -fL \
+            -H "Authorization: token $TOKEN" \
             -H "Accept: application/vnd.github.raw" \
             -o cv_raw_html.html \
-            https://api.github.com/repos/$REPO/contents/cv_raw_html.html?ref=$SHA
+            https://api.github.com/repos/$REPO/contents/cv_raw_html.html?ref=main
 
-          curl -H "Authorization: token $TOKEN" \
+          curl -fL \
+            -H "Authorization: token $TOKEN" \
             -H "Accept: application/vnd.github.raw" \
             -o cv.pdf \
-            https://api.github.com/repos/$REPO/contents/cv.pdf?ref=$SHA
+            https://api.github.com/repos/$REPO/contents/cv.pdf?ref=main
 
       - name: Validate downloads
         run: |
           test -s cv_raw_html.html
           test -s cv.pdf
 
-      - name: Inject HTML into template
+      - name: Inject HTML into template (safe)
         run: |
-          cp cv-shell.html cv-shell.html.tmp
-
-          CONTENT=$(cat cv_raw_html.html)
-
-          # Replace placeholder
-          awk -v content="$CONTENT" '
-            /<!-- cv_insertion_point -->/ {
-              print content
-              next
-            }
-            { print }
-          ' cv-shell.html.tmp > cv.generated.html
+          python3 -c "
+          from pathlib import Path
+          shell = Path('cv-shell.html').read_text()
+          content = Path('cv_raw_html.html').read_text()
+          if '<!-- cv_insertion_point -->' not in shell:
+            raise SystemExit('Placeholder not found')
+          result = shell.replace('<!-- cv_insertion_point -->', content)
+          Path('cv.generated.html').write_text(result)
+          "
 
       - name: Compare with existing
         id: diff
